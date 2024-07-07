@@ -1,0 +1,45 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Edu+TAS+Beginner:wght@400..700&family=Teko:wght@300..700&display=swap');
+img {
+    width: 500px;
+    height: auto;
+}
+
+h1 {
+    font-family: 'Teko', sans-serif;
+}
+
+h2 {
+    font-family: 'Edu TAS Beginner', sans-serif;
+}
+
+li {
+    font-family: 'Bitter', sans-serif;
+}
+
+ul {
+    list-style-type: square;
+}
+
+body {
+    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    color: white;
+}
+
+.first_half {
+    width: 200px;
+    float: left;
+}
+
+.second_half {
+    margin-left: 220px;
+}
+
+.education_image {
+    margin: auto;
+    max-width: 60%;
+    height: auto;
+}
+
+.education_bullet {
+    margin-bottom: 100px;
+}
