@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35122.118
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nathans-Project", "Nathans-Project\Nathans-Project.csproj", "{83B22E63-F599-4D26-B073-8361FCDDF032}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83B22E63-F599-4D26-B073-8361FCDDF032}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83B22E63-F599-4D26-B073-8361FCDDF032}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83B22E63-F599-4D26-B073-8361FCDDF032}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{83B22E63-F599-4D26-B073-8361FCDDF032}.Debug|x86.Build.0 = Debug|Any CPU
+		{83B22E63-F599-4D26-B073-8361FCDDF032}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83B22E63-F599-4D26-B073-8361FCDDF032}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83B22E63-F599-4D26-B073-8361FCDDF032}.Release|x86.ActiveCfg = Release|Any CPU
+		{83B22E63-F599-4D26-B073-8361FCDDF032}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1E3C0627-A07E-4A5E-8AB3-068F60B64D28}
+	EndGlobalSection
+EndGlobal
