@@ -8,4 +8,9 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.x"
-      - run: dotnet run --project Portfolio.csproj
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: |
+          dotnet run --project Portfolio.csproj & \
+            deno jsr:@EthanThatOneKid/sparchive --entrypoint="http://localhost:5126/"
