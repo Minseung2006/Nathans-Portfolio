@@ -5,18 +5,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.x"
+
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
+
       - run: |
           dotnet run --project Portfolio.csproj & \
             deno -A jsr:@etok/sparchive --entrypoint="http://localhost:5126/"
+
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3
+        if: always()
         with:
           path: build/
 
