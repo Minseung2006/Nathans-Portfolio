@@ -18,13 +18,6 @@ jobs:
       - name: Prepare build directory
         run: mkdir -p build
 
-      # Debug: Print current directory and environment
-      - name: Debug environment
-        run: |
-          pwd
-          ls -la
-          env
-
       # Run server and build process with error handling
       - name: Build site
         run: |
@@ -35,7 +28,7 @@ jobs:
           sleep 5
 
           # Run Deno script with error handling
-          deno -A jsr:@etok/sparchive --entrypoint="http://localhost:5126/" || {
+          deno -A jsr:@etok/sparchive --entrypoint="http://localhost:5126/" --output="build" || {
             echo "Deno script failed"
             kill $SERVER_PID
             exit 1
