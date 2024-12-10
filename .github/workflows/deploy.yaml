@@ -1,7 +1,7 @@
 on: workflow_dispatch
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -13,4 +13,26 @@ jobs:
           deno-version: v2.x
       - run: |
           dotnet run --project Portfolio.csproj & \
-            deno jsr:@EthanThatOneKid/sparchive --entrypoint="http://localhost:5126/"
+            deno -A jsr:@etok/sparchive --entrypoint="http://localhost:5126/"
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/
+
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
