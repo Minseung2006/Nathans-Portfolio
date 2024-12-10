@@ -1,7 +1,16 @@
-on: workflow_dispatch
+name: Vercel Deployment
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,7 +23,11 @@ jobs:
         with:
           deno-version: v2.x
 
-      # Ensure build directory exists
+      # Install Vercel CLI
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      # Prepare build directory
       - name: Prepare build directory
         run: mkdir -p build
 
@@ -49,24 +62,10 @@ jobs:
             exit 1
           }
 
-      # Upload artifacts with fallback
-      - name: Upload static files as artifact
-        id: deployment
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: build/
-          retention-days: 1
+      # Pull Vercel Environment Information
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-  deploy:
-    needs: build
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      # Deploy to Vercel directly from build directory
+      - name: Deploy to Vercel
+        run: vercel deploy build --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
