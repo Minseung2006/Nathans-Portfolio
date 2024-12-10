@@ -1,10 +1,11 @@
 on: workflow_dispatch
 
-deploy:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-dotnet@v4
-      with:
-        cache: true
-    - run: dotnet build Portfolio.sln
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.x"
+      - run: dotnet build Portfolio.sln
