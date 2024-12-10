@@ -34,14 +34,14 @@ jobs:
       # Run server and build process with error handling
       - name: Build site
         run: |
-          dotnet run --project Portfolio.csproj & 
+          dotnet run --project Portfolio.csproj &
           SERVER_PID=$!
 
           # Wait a moment to ensure server is up
           sleep 15
 
           # Run Deno script with error handling
-          deno -A jsr:@etok/sparchive --entrypoint="http://localhost:5126/" --output="build" || {
+          deno -A jsr:@etok/sparchive@0.0.2 --entrypoint="http://localhost:5126/" --output="build" || {
             echo "Deno script failed"
             kill $SERVER_PID
             exit 1
