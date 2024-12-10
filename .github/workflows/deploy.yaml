@@ -14,28 +14,64 @@ jobs:
         with:
           deno-version: v2.x
 
-      - run: |
-          dotnet run --project Portfolio.csproj & \
-            deno -A jsr:@etok/sparchive --entrypoint="http://localhost:5126/"
+      # Ensure build directory exists
+      - name: Prepare build directory
+        run: mkdir -p build
 
+      # Debug: Print current directory and environment
+      - name: Debug environment
+        run: |
+          pwd
+          ls -la
+          env
+
+      # Run server and build process with error handling
+      - name: Build site
+        run: |
+          dotnet run --project Portfolio.csproj & 
+          SERVER_PID=$!
+
+          # Wait a moment to ensure server is up
+          sleep 5
+
+          # Run Deno script with error handling
+          deno -A jsr:@etok/sparchive --entrypoint="http://localhost:5126/" || {
+            echo "Deno script failed"
+            kill $SERVER_PID
+            exit 1
+          }
+
+          # Ensure server is stopped
+          kill $SERVER_PID
+
+      # Verify build directory contents
+      - name: Verify build contents
+        run: |
+          echo "Build directory contents:"
+          ls -la build/
+
+          # Fail if build directory is empty
+          [ "$(ls -A build/)" ] || {
+            echo "Error: Build directory is empty"
+            exit 1
+          }
+
+      # Upload artifacts with fallback
       - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3
-        if: always()
         with:
           path: build/
+          retention-days: 1
 
   deploy:
     needs: build
-
     permissions:
       pages: write
       id-token: write
-
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
