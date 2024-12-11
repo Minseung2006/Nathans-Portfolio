@@ -1,0 +1,91 @@
+name: Vercel Deployment
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.x"
+
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      # Prepare build directory
+      - name: Prepare build directory
+        run: mkdir -p build
+
+      # Run server and build process with error handling
+      - name: Build site
+        run: |
+          dotnet run --project Portfolio.csproj &
+          SERVER_PID=$!
+
+          # Wait a moment to ensure server is up
+          sleep 15
+
+          # Run Deno script with error handling
+          deno -A jsr:@etok/sparchive@0.0.2 --entrypoint="http://localhost:5126/" --output="build" || {
+            echo "Deno script failed"
+            kill $SERVER_PID
+            exit 1
+          }
+
+          # Ensure server is stopped
+          kill $SERVER_PID
+
+      # Verify build directory contents
+      - name: Verify build contents
+        run: |
+          echo "Build directory contents:"
+          ls -la build/
+
+          # Fail if build directory is empty
+          [ "$(ls -A build/)" ] || {
+            echo "Error: Build directory is empty"
+            exit 1
+          }
+
+      # Upload build artifacts
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+
+      # Download build artifacts
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: build/
+
+      # Install Vercel CLI
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      # Pull Vercel Environment Information
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      # Deploy to Vercel directly from build directory
+      - name: Deploy to Vercel
+        run: vercel deploy build --prod --token=${{ secrets.VERCEL_TOKEN }}
