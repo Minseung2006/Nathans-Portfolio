@@ -34,7 +34,9 @@ jobs:
           SERVER_PID=$!
 
           # Wait a moment to ensure server is up
-          sleep 60
+          while ! nc -z localhost 5126; do
+            sleep 1
+          done
 
           # Run Deno script with error handling
           deno -A jsr:@etok/sparchive@0.0.2 --entrypoint="http://localhost:5126/" --output="build" || {
