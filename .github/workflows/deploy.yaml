@@ -39,7 +39,7 @@ jobs:
           done
 
           # Run Deno script with error handling
-          deno -A jsr:@etok/sparchive@0.0.2 --entrypoint="http://localhost:5126/" --output="build" || {
+          deno -A jsr:@etok/sparchive --entrypoint="http://localhost:5126/" --output="build" || {
             echo "Deno script failed"
             kill $SERVER_PID
             exit 1
