@@ -41,7 +41,7 @@ jobs:
 
           # Run the HTTrack command to download the website
           httrack "http://localhost:5126" -O "./build" \
-            -r10 -c8 -W -v -n --disable-security-limits --keep-alive \
+            -r10 -c8 -w -a -v -n --disable-security-limits --keep-alive \
             -F "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36" || {
             echo "Deno script failed"
             kill $SERVER_PID
